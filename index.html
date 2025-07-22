@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>College Notes Portal</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fefae0;
+      color: #333;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #606c38;
+      color: #fefae0;
+      padding: 1rem;
+    }
+
+    .logo-title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .college-logo {
+      height: 60px;
+      width: auto;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      max-width: 90vw;
+    }
+
+    .intro {
+      padding: 1.5rem;
+      background-color: #ffffff;
+      margin: 1rem auto;
+      max-width: 800px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    .dropdowns {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2rem 1rem;
+    }
+
+    select {
+      appearance: none;
+      background-color: #ffffff;
+      color: #283618;
+      padding: 0.7rem 1rem;
+      font-size: 1rem;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      min-width: 200px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+      transition: border 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='14' height='10' viewBox='0 0 14 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23666' d='M7 10L0 0h14z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.7rem center;
+      background-size: 12px;
+    }
+
+    select:focus {
+      border-color: #0a4275;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(10, 66, 117, 0.15);
+    }
+
+    #linkContainer a {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.8rem 1.5rem;
+      background-color: #283618;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background-color 0.3s ease;
+    }
+
+    #linkContainer a:hover {
+      background-color: #c9af50;
+    }
+    .pyq-button-wrapper {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.pyq-button {
+  display: inline-block;
+  padding: 0.9rem 1.8rem;
+  background-color: #283618;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pyq-button:hover {
+  background-color: #c9af50;
+  transform: translateY(-2px);
+}
+
+    @media (max-width: 768px) {
+      .logo-title {
+        flex-direction: column;
+      }
+
+      .dropdowns {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .college-logo {
+        height: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo-title">
+      <img src="logo.png" alt="College Logo" class="college-logo">
+      <h1>'s Collected Lec Notes from RKMVERI</h1>
+    </div>
+  </header>
+
+  <section class="intro">
+    <h2>Welcome to My Notes Portal</h2>
+    <p>I am Nishanka Das, MSc Computer Science student. This portal contains lecture notes and question papers from various semesters of our course.</p>
+  </section>
+
+  <section class="dropdowns">
+    <select id="semesterSelect" onchange="populateCourses()">
+      <option disabled selected>Select Semester</option>
+    </select>
+
+    <select id="courseSelect" onchange="populateLectures()" disabled>
+      <option disabled selected>Select Course</option>
+    </select>
+
+    <select id="lectureSelect" onchange="showLectureLink()" disabled>
+      <option disabled selected>Select Lecture</option>
+    </select>
+  </section>
+  <div id="linkContainer"></div>
+  <div class="pyq-button-wrapper">
+  <a href="pyq.html" class="pyq-button">Go to PYQ Page</a>
+</div>
+
+  
+
+  <script>
+    const data = {
+      "Semester 1": ["Theory of computation", "Machine Learning", "Design and Analysis of Algorithms"],
+      "Semester 2": ["DSA", "OS", "DBMS", "Networks"]
+    };
+
+    const lecturesData = {
+      "Machine Learning": ["SVM", "Decision Trees", "KNN", "Naive Bayes", "Neural Networks", "Ensemble", "Overfitting", "Regularization", "Clustering", "PCA", "Dimensionality Reduction", "Bias-Variance", "Loss Functions", "Cross Validation", "Applications"],
+      "Design and Analysis of Algorithms": ["Recursion", "Divide and Conquer", "Greedy", "Dynamic Programming", "Backtracking", "Graph", "DFS BFS", "Shortest Path", "Flow Network", "NP Problems", "Approximation", "Randomization", "Amortized", "Bit Algo", "Summary"],
+      "DSA": ["Arrays", "LinkedList", "Stacks", "Queues", "Trees", "Graphs", "Hashing", "Heaps", "Sorting", "Searching", "Greedy", "Backtracking", "Dynamic Prog", "Bit Manip", "Recap"]
+    };
+
+    const semesterSelect = document.getElementById("semesterSelect");
+    const courseSelect = document.getElementById("courseSelect");
+    const lectureSelect = document.getElementById("lectureSelect");
+
+    for (const semester in data) {
+      const option = document.createElement("option");
+      option.value = semester;
+      option.text = semester;
+      semesterSelect.add(option);
+    }
+
+    function populateCourses() {
+      const selectedSemester = semesterSelect.value;
+      courseSelect.innerHTML = '<option disabled selected>Select Course</option>';
+      lectureSelect.innerHTML = '<option disabled selected>Select Lecture</option>';
+      document.getElementById("linkContainer").innerHTML = "";
+
+      const courses = data[selectedSemester];
+      courses.forEach(course => {
+        const option = document.createElement("option");
+        option.value = course;
+        option.text = course;
+        courseSelect.add(option);
+      });
+
+      courseSelect.disabled = false;
+      lectureSelect.disabled = true;
+    }
+
+    function populateLectures() {
+      const course = courseSelect.value;
+      lectureSelect.innerHTML = '<option disabled selected>Select Lecture</option>';
+      document.getElementById("linkContainer").innerHTML = "";
+
+      const lectures = lecturesData[course];
+      if (lectures) {
+        lectures.forEach((topic, i) => {
+          const option = document.createElement("option");
+          option.value = `L${i+1}-${topic.replace(/\s+/g, '')}`;
+          option.text = `L${i+1} - ${topic}`;
+          lectureSelect.add(option);
+        });
+
+        lectureSelect.disabled = false;
+      } else {
+        lectureSelect.disabled = true;
+      }
+    }
+
+    function showLectureLink() {
+      const selected = lectureSelect.value;
+      document.getElementById("linkContainer").innerHTML = `<a href="notes/${selected}.pdf" target="_blank">Open ${selected}</a>`;
+    }
+  </script>
+</body>
